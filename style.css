@@ -1,0 +1,46 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttons {
+  display: flex;
+  gap: 30px;
+}
+
+.tesoura,
+.pedra,
+.papel {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+img {
+  border: none;
+  border-radius: 10px;
+  height: 100px;
+  width: 200px;
+}
+
+button {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+.resultados {
+  margin: 20px;
+}

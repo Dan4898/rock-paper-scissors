@@ -1,78 +1,59 @@
-//Defines the plays from computer
-function getComputerChoice(){
-    //Get a random number from zero to two
-    const random = Math.floor(Math.random() * 3);
+const buttons = document.querySelectorAll("button");
+const resultado = document.querySelector(".resultados");
+const body = document.querySelector("body");
 
-    //If condition to apply the random number to the play
-    if(random === 0){
-        console.log('Scissors')
-        return 'Scissors'
-    } else if ( random === 1){
-        console.log('Rock')
-        return 'Rock'
-    } else if (random === 2){
-        console.log('Paper')
-        return 'Paper'
-    }
+function computerPlay() {
+  const plays = ["Scissors", "Rock", "Paper"];
+  const random = Math.trunc(Math.random() * plays.length);
+  return plays[random];
 }
 
+let humanPoints = 0;
+let computerPoints = 0;
+let roundsPlayed = 0;
 
-//Asks the user play
-function getHumanChoice(){
-    //Prompt to write the play
-    const choice = prompt("Write you play('Scissors', 'Rock', 'Paper'): ");
-    //Converts the first letter to upper case
-    const firstLetter = choice.charAt(0).toUpperCase();
-    //Converts the reamaining letters to lower case
-    const restLetters = choice.slice(1, choice.length).toLowerCase();
-    //Concatenate the word
-    const completeWord = firstLetter + restLetters;
-    console.log(completeWord);
-    return completeWord;
+function playRound(humanPlay, computerPlay) {
+  if (humanPlay === computerPlay) {
+    resultado.textContent = `${humanPlay} and ${computerPlay} - Draw!`;
+  } else if (
+    (humanPlay === "Rock" && computerPlay === "Scissors") ||
+    (humanPlay === "Paper" && computerPlay === "Rock") ||
+    (humanPlay === "Scissors" && computerPlay === "Paper")
+  ) {
+    humanPoints++;
+    resultado.textContent = `${humanPlay} beats ${computerPlay}!`;
+  } else {
+    computerPoints++;
+    resultado.textContent = `${computerPlay} beats ${humanPlay}!`;
+  }
+
+  roundsPlayed++;
+  resultado.textContent += ` | Round ${roundsPlayed}/5`;
+  resultado.textContent += ` | Computer: ${computerPoints} - You: ${humanPoints}`;
+
+  if (roundsPlayed === 5) {
+    endGame();
+  }
 }
 
-//Function to play the game 5 times
-function playGame(){
-    //Variables to increase the points each time a player wins
-    let humanScore = 0;
-    let computerScore = 0;
+function endGame() {
+  const winner = document.createElement("h2");
 
-    //Defines the results of each possible play and increase the points of the variables
-    function playRound(humanChoice, computerChoice){
-        if (humanChoice === 'Scissors' && computerChoice === 'Paper'){
-            console.log('You win! Scissors beats Paper');
-            humanScore += 1;
-        } else if (humanChoice === 'Paper' && computerChoice === 'Rock'){
-            console.log('You win! Paper beats Rock');
-            humanScore += 1;
-        } else if (humanChoice === 'Rock' && computerChoice === 'Scissors'){
-            console.log('You win! Rock beats Scissors');
-            humanScore += 1;
-        } else if (humanChoice === 'Paper' && computerChoice === 'Scissors'){
-            console.log('You lose! Scissors beats Paper');
-            computerScore += 1;
-        } else if (humanChoice === 'Rock' && computerChoice === 'Paper'){
-            console.log('You lose! Paper beats Rock');
-            computerScore += 1;
-        } else if (humanChoice === 'Scissors' && computerChoice === 'Rock'){
-            console.log('You lose! Rock beats Scissors');
-            computerScore += 1;
-        } else {
-            console.log('Draw')
-        }
-}
-//For loop to repeat the play 5 times
-for (let i = 0; i < 5; i++){
-    playRound(getHumanChoice(), getComputerChoice())
+  if (humanPoints > computerPoints) {
+    winner.textContent = "Congratulations! You win!";
+  } else if (humanPoints === computerPoints) {
+    winner.textContent = "Draw";
+  } else {
+    winner.textContent = "Too bad! Computer wins!";
+  }
+
+  body.appendChild(winner);
+  buttons.forEach((button) => (button.disabled = true));
 }
 
-//Console the final result of the game
-console.log(`Final Score - You: ${humanScore}, Computer: ${computerScore}`);
-if(humanScore > computerScore) console.log("You won the game!");
-else if(humanScore < computerScore) console.log("You lost the game!");
-else console.log("The game is a draw!");
-
-
+for (let i = 0; i < buttons.length; i++) {
+  buttons[i].addEventListener("click", function () {
+    const pressedButton = buttons[i].getAttribute("class");
+    playRound(pressedButton, computerPlay());
+  });
 }
-
-playGame();
